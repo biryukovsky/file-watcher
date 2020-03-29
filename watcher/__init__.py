@@ -9,8 +9,6 @@ from watchdog.events import FileSystemEventHandler
 docs_ext = ('doc', 'docx', 'xls', 'xlsx', 'html', 'pdf', 'odf',
             'txt', 'ppt', 'pptx', )
 media_ext = ('jpg', 'jpeg', 'png', 'gif', 'heic', 'mp4', 'avi', )
-# TODO: get path from cmd args
-BASE_PATH = '/Users/biryukovsky/Downloads/'
 
 
 def get_folder(ext: str):
@@ -30,12 +28,12 @@ class EventHandler(FileSystemEventHandler):
 
         t = int(time.time())
 
-        path, ext = os.path.splitext(event.src_path)
-        filename = os.path.basename(path)
+        base, file = os.path.split(event.src_path)
+        filename, ext = os.path.splitext(file)
         filename = '{}-{}{}'.format(filename, t, ext)
 
         folder = get_folder(ext)
-        path_to_move = os.path.join(BASE_PATH, folder)
+        path_to_move = os.path.join(base, folder)
 
         shutil.move(event.src_path, os.path.join(path_to_move, filename))
 
